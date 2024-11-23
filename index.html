@@ -545,6 +545,2749 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="content">
+
+    <h1>Basic Concepts of OWL (Odoo Web Library)</h1>
+    <p>
+      OWL (Odoo Web Library) ek lightweight JavaScript framework hai, jo Odoo ke frontend ko handle karta hai. OWL ko
+      primarily Odoo 14 ke baad use kiya gaya tha, aur isse Odoo apps mein front-end functionality ko modular aur
+      reactive
+      tarike se implement kiya jata hai.
+    </p>
+    <p>
+      OWL ke through, aap components create kar sakte hain jo UI ko manage karte hain, state aur actions ko handle karte
+      hain,
+      aur backend ke saath communication ko asaan banate hain.
+    </p>
+
+    <h2>Components in OWL</h2>
+    <p>
+      OWL mein components ek fundamental concept hain. Components basically re-usable units hain jo apne logic, state,
+      aur
+      rendering ko encapsulate karte hain. Components aapke UI ko manage karte hain, aur inmein state, actions,
+      lifecycle
+      methods, aur UI rendering hoti hai.
+    </p>
+
+    <h3>What are Components in OWL?</h3>
+    <p>
+      Components ko aap UI elements ya behavior ko define karne ke liye use karte hain. Har component apna state,
+      methods, aur
+      rendering logic rakhta hai. Components ko render kiya jata hai, aur jab component ka state change hota hai, toh
+      woh re-render
+      hota hai. Components ko aap as JavaScript classes define karte hain, jo Owl ki Component class ko extend karte
+      hain.
+    </p>
+
+    <h3>Creating a Basic Component in OWL</h3>
+    <p>
+      OWL mein ek simple component create karna kaafi straightforward hai. Hum ek counter component banayenge, jisme ek
+      button
+      hoga jo click karne par count ko increment karega.
+    </p>
+
+    <h4>1. Basic Component Example (Counter Component)</h4>
+    <pre>
+      <code class="language-javascript">
+  // static/src/counter_component.js
+  import { Component, useState } from "owl";
+  
+  class Counter extends Component {
+    // Setup hook mein state initialize karte hain
+    setup() {
+      // useState hook ka use karke counter ko initialize karte hain
+      this.count = useState(0);
+    }
+  
+    // Method to increment the counter
+    increment() {
+      this.count += 1; // Counter ko increment karna
+    }
+  
+    // Render method, jo UI ko return karega
+    render() {
+      return `
+        <div>
+          <p>Counter: <t t-esc="count" /></p>
+          <button t-on-click="increment">Increment</button>
+        </div>
+      `;
+    }
+  }
+  
+  // Template ko associate karte hain
+  Counter.template = 'CounterTemplate';
+  export default Counter;
+      </code>
+    </pre>
+    <p><strong>Explanation:</strong></p>
+    <ul>
+      <li><strong>setup():</strong> Yeh method component ke state ko define karta hai. Hum yahan useState(0) ka use
+        karte hain jisse count ki initial value 0 hogi.</li>
+      <li><strong>increment():</strong> Yeh method count ko increment karta hai. Jab button click hota hai, tab
+        increment() method call hota hai, aur count value ko 1 se badha diya jata hai.</li>
+      <li><strong>render():</strong> Yeh method UI ko define karta hai. Hum yahan ek p tag mein current count ko show
+        kar rahe hain aur ek button add kiya hai jisme t-on-click directive hai, jo button ke click hone par increment()
+        method ko call karega.</li>
+    </ul>
+
+    <h4>2. Component Template (In Odoo)</h4>
+    <p>
+      Template ko Odoo mein manage karne ke liye aapko XML file ki zarurat hoti hai. Template ko HTML jaisa hi likha
+      jata hai,
+      jisme Owl directives jaise t-esc aur t-on-click ka use hota hai.
+    </p>
+    <pre>
+      <code class="language-xml">
+  &lt;!-- static/src/xml/counter_template.xml --&gt;
+  &lt;odoo&gt;
+    &lt;template id="CounterTemplate"&gt;
+      &lt;div&gt;
+        &lt;p&gt;Counter: 
+          &lt;t t-esc="component.count" /&gt;
+        &lt;/p&gt;
+        &lt;button t-on-click="component.increment"&gt;Increment&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/template&gt;
+  &lt;/odoo&gt;
+      </code>
+    </pre>
+    <p>
+      <strong>t-esc="component.count":</strong> Yeh directive counter ki value ko dynamically display karta hai.
+      <strong>t-on-click="component.increment":</strong> Yeh button click hone par increment() method ko call karega.
+    </p>
+
+    <h3>Rendering Components in OWL</h3>
+    <p>
+      Components ko render karna OWL mein kaafi simple hai. Aapko bas component ko ek root DOM element mein render karna
+      hota
+      hai.
+    </p>
+
+    <h4>1. Rendering the Component in a Web Page:</h4>
+    <pre>
+      <code class="language-javascript">
+  // static/src/main.js
+  import { mount } from "owl";
+  import Counter from "./counter_component";
+  
+  // Yahan component ko ek div element mein render kar rahe hain
+  mount(Counter, {
+    target: document.getElementById("counter-container"), // Yahan DOM target define karte hain
+  });
+      </code>
+    </pre>
+    <p><strong>mount():</strong> Yeh function component ko ek HTML DOM element ke saath associate karta hai. Jab Counter
+      component ko mount kiya jata hai, woh target element mein render ho jata hai.</p>
+
+    <h4>2. HTML Template for Mounting the Component:</h4>
+    <pre>
+      <code class="language-xml">
+  &lt;!-- static/src/index.html --&gt;
+  &lt;!DOCTYPE html&gt;
+  &lt;html lang="en"&gt;
+  
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;OWL Counter Example&lt;/title&gt;
+  &lt;/head&gt;
+  
+  &lt;body&gt;
+    &lt;div id="counter-container"&gt;&lt;/div&gt;
+  
+    &lt;script src="/static/src/main.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+  
+  &lt;/html&gt;
+      </code>
+    </pre>
+    <p>
+      <strong>&lt;div id="counter-container"&gt;&lt;/div&gt;:</strong> Yeh div element hai, jahan aap Counter component
+      ko render karenge.
+    </p>
+
+    <h3>Complete Example in Odoo Module</h3>
+    <p>
+      Jab aap OWL components ko Odoo module mein use karte hain, toh aapko apne assets aur template files ko properly
+      configure karna padta hai.
+    </p>
+
+    <h4>Module Manifest (__manifest__.py)</h4>
+    <pre>
+      <code class="language-python">
+  {
+    'name': 'Counter Example Module',
+    'version': '1.0',
+    'depends': ['web'],
+    'data': [
+      'views/counter_template.xml',
+    ],
+    'assets': {
+      'web.assets_frontend': [
+        'my_module/static/src/counter_component.js',
+        'my_module/static/src/main.js',
+      ],
+    },
+  }
+      </code>
+    </pre>
+
+    <h4>Template File (counter_template.xml)</h4>
+    <pre>
+      <code class="language-xml">
+  &lt;odoo&gt;
+    &lt;template id="CounterTemplate"&gt;
+      &lt;div&gt;
+        &lt;p&gt;Counter:
+          &lt;t t-esc="component.count" /&gt;
+        &lt;/p&gt;
+        &lt;button t-on-click="component.increment"&gt;Increment&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/template&gt;
+  &lt;/odoo&gt;
+      </code>
+    </pre>
+
+    <h4>Main JavaScript File (main.js)</h4>
+    <pre>
+      <code class="language-javascript">
+  import { mount } from "owl";
+  import Counter from "./counter_component";
+  
+  mount(Counter, {
+    target: document.getElementById("counter-container"),
+  });
+      </code>
+    </pre>
+
+
+    <h1>Owl JS Lifecycle Hooks in Odoo</h1>
+    <p>
+      Owl JS, jo ki Odoo ka web framework hai, components ko manage karne ke liye lifecycle hooks provide karta hai. Ye
+      hooks
+      aapko component ke different phases mein help karte hain, jaise ki initialization, rendering, updates, aur
+      cleanup. In
+      hooks ka use kar ke aap apne Odoo components ko better tarike se manage kar sakte hain.
+    </p>
+    <p>
+      Ab hum in lifecycle hooks ko detail mein samjhenge, aur har ek hook ko real-world Odoo example ke saath explain
+      karenge.
+    </p>
+
+    <h2>1. setup() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook component ko initialize karta hai aur state set karta hai. Jab component render hona start hota hai, tab
+      setup()
+      run hota hai.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Aap state set kar sakte hain, ya phir reusable logic yahan likh sakte hain. Jaise, agar aapko kisi variable ki
+      initial
+      value deni ho ya kisi dependency ko set karna ho.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+      <code class="language-javascript">
+  // file: CounterComponent.js
+  import { Component, useState } from "@odoo/owl";
+  
+  export class CounterComponent extends Component {
+    setup() {
+      // Initial state setup
+      this.state = useState({ count: 0 }); // Counter ki initial value 0 hai
+    }
+  
+    increment() {
+      this.state.count += 1; // Button click par counter increment hoga
+    }
+  }
+      </code>
+    </pre>
+    <h3>XML Template:</h3>
+    <pre>
+      <code class="language-xml">
+  &lt;template&gt;
+    &lt;div&gt;
+      &lt;p&gt;Count:
+        &lt;t t-esc="state.count" /&gt;
+      &lt;/p&gt; &lt;!-- State ke count ko render karega --&gt;
+      &lt;button t-on-click="increment"&gt;Increment&lt;/button&gt; &lt;!-- Increment button --&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+      </code>
+    </pre>
+    <p>
+      Yahan, setup() hook me humne state initialize kiya hai jo counter ka value rakhega.
+    </p>
+
+    <h2>2. willStart() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook component mount hone se pehle run hota hai. Agar aapko data fetch karna ho, ya kisi asynchronous task ko
+      perform karna ho, toh aap willStart() ka use kar sakte hain.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Yahan pe aap kisi API se data fetch kar sakte hain ya kisi operation ko asynchronous tor pe handle kar sakte hain.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+      <code class="language-javascript">
+  // file: ProductList.js
+  export class ProductList extends Component {
+    async willStart() {
+      // Product data fetch karte hain, taaki component render ho jane ke baad data ho
+      this.products = await this.fetchProducts();
+    }
+  
+    async fetchProducts() {
+      const response = await fetch('/api/products');
+      return response.json(); // Products ki list fetch kar rahe hain
+    }
+  }
+      </code>
+    </pre>
+    <h3>XML Template:</h3>
+    <pre>
+      <code class="language-xml">
+  &lt;template&gt;
+    &lt;div&gt;
+      &lt;ul&gt;
+        &lt;li t-foreach="products" t-as="product"&gt;
+          &lt;t t-esc="product.name" /&gt; &lt;!-- Product name ko display karega --&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+      </code>
+    </pre>
+    <p>
+      Is example me willStart() hook ka use karke humne API se product data fetch kiya hai jo component render hone se
+      pehle
+      ho gaya.
+    </p>
+
+    <h2>3. willRender() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook component ke render hone se pehle run hota hai. Agar aapko kisi cheez ko modify karna ho, jaise ki state
+      ko
+      validate karna ya update karna, toh aap willRender() ka use kar sakte hain.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Aap state ya props ko modify kar sakte hain ya valid kar sakte hain before the actual render.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+      <code class="language-javascript">
+  // file: ProductDetails.js
+  export class ProductDetails extends Component {
+    willRender() {
+      // Agar product ka naam nahi hai toh default set kar do
+      if (!this.product.name) {
+        this.product.name = 'Unknown Product'; // Default value set kar rahe hain
+      }
+    }
+  }
+      </code>
+    </pre>
+    <h3>XML Template:</h3>
+    <pre>
+      <code class="language-xml">
+  &lt;template&gt;
+    &lt;div&gt;
+      &lt;h1&gt;
+        &lt;t t-esc="product.name" /&gt;
+      &lt;/h1&gt; &lt;!-- Product ka name show karega --&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+      </code>
+    </pre>
+    <p>
+      Yahan humne willRender() hook me check kiya ki agar product.name empty hai toh usko default value set kar denge.
+    </p>
+
+
+
+    <h1>Owl JS Lifecycle Hooks in Odoo</h1>
+
+    <h2>4. mounted() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook component ke DOM par mount hone ke baad run hota hai. Aap is hook mein DOM interactions ya third-party
+      libraries ko initialize kar sakte hain.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Jaise ki input field pe focus set karna, ya kisi third-party library ka initialization.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+    <code class="language-javascript">
+// file: SearchBar.js
+export class SearchBar extends Component {
+  mounted() {
+    // Input field pe focus set kar rahe hain jab component mount ho jaye
+    this.el.querySelector('input').focus();
+  }
+}
+    </code>
+  </pre>
+    <h3>XML Template:</h3>
+    <pre>
+    <code class="language-xml">
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;input type="text" placeholder="Search..." /&gt; &lt;!-- Search bar input --&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+    </code>
+  </pre>
+    <p>
+      Yahan, humne mounted() hook mein input field pe focus set kiya jab component DOM par mount ho gaya.
+    </p>
+
+    <h2>5. shouldUpdate() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook decide karta hai ki component ko update hona chahiye ya nahi jab state ya props change ho. Ye performance
+      optimization ke liye use hota hai.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Agar aapko lagta hai ki component ko re-render hone ki zarurat nahi hai, toh aap shouldUpdate() hook mein logic
+      laga
+      sakte hain.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+    <code class="language-javascript">
+// file: ProductCard.js
+export class ProductCard extends Component {
+  shouldUpdate(nextProps) {
+    // Agar product ka ID change nahi hota toh update nahi karna
+    return nextProps.product.id !== this.props.product.id;
+  }
+}
+    </code>
+  </pre>
+
+    <h2>6. willUpdateProps() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook component ke props update hone se pehle run hota hai. Aap props ko modify ya validate kar sakte hain
+      before
+      the update.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Agar aapko kisi prop ka validation ya modification karna ho before the update.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+    <code class="language-javascript">
+// file: ProductDetails.js
+export class ProductDetails extends Component {
+  willUpdateProps(nextProps) {
+    // Agar product ka price invalid ho toh error show karna
+    if (nextProps.product.price < 0) { 
+      console.error('Invalid product price'); 
+    }
+  }
+}
+    </code>
+  </pre>
+
+    <h2>7. willPatch() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook DOM ke patch hone se pehle run hota hai. Aap changes ko modify kar sakte hain ya fine-tune kar sakte hain
+      before they are applied.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Agar aapko patch ke changes ko manipulate karna ho, jaise ki kisi condition par update ko change karna.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+    <code class="language-javascript">
+// file: NotificationBanner.js
+export class NotificationBanner extends Component {
+  willPatch(nextState) {
+    // Agar message bohot lamba ho, toh truncate kar do
+    if (nextState.message.length > 100) {
+      nextState.message = 'Message too long';
+    }
+  }
+}
+    </code>
+  </pre>
+
+    <h2>8. patched() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook DOM ke patch hone ke baad run hota hai. Aap post-update tasks perform kar sakte hain, jaise ki logging ya
+      analytics.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Jab DOM update ho jata hai, toh aap post-update actions perform kar sakte hain.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+    <code class="language-javascript">
+// file: MessageComponent.js
+export class MessageComponent extends Component {
+  patched() {
+    console.log('Component DOM patched successfully!');
+  }
+}
+    </code>
+  </pre>
+
+    <h2>9. willUnmount() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook component ke DOM se remove hone se pehle run hota hai. Cleanup tasks jaise event listeners remove karna,
+      timers stop karna,
+      ya resources release karna yahan kiya jata hai.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Agar aapko event listeners ko remove karna ho ya timers ko stop karna ho jab component destroy ho jaye.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+    <code class="language-javascript">
+// file: TimerComponent.js
+export class TimerComponent extends Component {
+  setup() {
+    this.timer = setInterval(() => {
+      console.log('Timer is running...');
+    }, 1000);
+  }
+
+  willUnmount() {
+    // Cleanup: Interval ko clear kar rahe hain
+    clearInterval(this.timer);
+  }
+}
+    </code>
+  </pre>
+
+    <h2>10. captureError() Hook</h2>
+    <h3>Purpose:</h3>
+    <p>
+      Ye hook component ke lifecycle mein kisi bhi error ko capture karta hai.
+    </p>
+    <h3>Use Case:</h3>
+    <p>
+      Agar koi error ho jati hai, toh aap usse handle kar sakte hain, log kar sakte hain, ya user ko error message show
+      kar sakte hain.
+    </p>
+    <h3>Example:</h3>
+    <pre>
+    <code class="language-javascript">
+// file: ErrorComponent.js
+export class ErrorComponent extends Component {
+  captureError(error) {
+    console.error('Error in component:', error);
+    // Handle the error (log it, report it, etc.)
+  }
+}
+    </code>
+  </pre>
+
+
+
+    <h1>useContext in Owl JS</h1>
+
+    <p>
+      Owl JS mein state aur effect hooks ka istemal karke aap apne component ke lifecycle ko efficiently manage kar
+      sakte hain.
+      Aap context ko component ke lifecycle ke different phases mein access kar sakte hain, jaise ki setup, mounted, aur
+      updated hooks.
+      Is tarah se aap component ke global state ko manage karte hue uska behavior customize kar sakte hain.
+    </p>
+
+    <p>
+      Aapko samjhane ke liye, hum ek real-world example lete hain, jisme hum state, effect hooks, aur context ko use
+      karenge.
+      Hum Odoo mein Owl JS ka use karke ek user profile ko manage karenge.
+    </p>
+
+    <h2>Project Structure:</h2>
+    <pre>
+    <code class="language-scss">
+/your_module
+/static
+/src
+  - user_profile.js // JavaScript file jisme Owl JS component hoga
+  - context.js // Context file jo global state ko manage karegi
+/views
+  - templates.xml // XML file jisme UI template hoga
+__manifest__.py // Module definition ke liye manifest file
+    </code>
+  </pre>
+
+    <h3>1. context.js - Global State ko manage karna</h3>
+    <p>
+      Hum ek context banayenge jisme user profile ki information ko globally manage kiya jayega. Yeh context different
+      components mein shared rahega.
+    </p>
+    <pre>
+    <code class="language-javascript">
+// static/src/context.js
+import { useContext } from "owl";
+
+// UserContext ko define karte hain jo global user information ko store karega
+export const UserContext = useContext({
+  userInfo: { name: '', email: '' },
+});
+    </code>
+  </pre>
+
+    <h3>2. user_profile.js - Component mein Context aur State ka use</h3>
+    <p>
+      Ab hum ek component banayenge jo UserContext ko use karega. Is component mein hum state hooks aur lifecycle hooks
+      ka use karenge.
+    </p>
+    <pre>
+    <code class="language-javascript">
+// static/src/user_profile.js
+import { Component, useState, useEffect } from "owl";
+import { UserContext } from './context'; // Importing the global context
+
+class UserProfile extends Component {
+  // setup() hook mein state aur context ko initialize karte hain
+  setup() {
+    this.userInfo = useState({ name: '', email: '' });
+    this.context = UserContext; // Context ko use kar rahe hain
+  }
+
+  // mounted() hook mein hum API call karte hain jab component mount ho
+  async mounted() {
+    await this.fetchUserData();
+  }
+
+  // API se user data fetch karne ka method
+  async fetchUserData() {
+    const response = await fetch('/api/user');
+    const data = await response.json();
+
+    this.context.userInfo = data; // Global context ko update karte hain
+    this.userInfo.name = data.name; // Local state ko update karte hain
+    this.userInfo.email = data.email; // Local state ko update karte hain
+  }
+
+  // Method to render user profile information
+  getUserProfile() {
+    return `Name: ${this.context.userInfo.name}, Email: ${this.context.userInfo.email}`;
+  }
+}
+
+// Template ko associate karte hain
+UserProfile.template = 'UserProfileTemplate';
+export default UserProfile;
+    </code>
+  </pre>
+
+    <h3>3. templates.xml - Template File</h3>
+    <p>
+      Yeh XML file aapke UI ko define karegi. Yahaan hum Owl JS template system ka use karenge taaki humare component ka
+      UI render ho sake.
+    </p>
+    <pre>
+    <code class="language-xml">
+&lt;!-- views/templates.xml --&gt;
+&lt;odoo&gt;
+  &lt;template id="UserProfileTemplate"&gt;
+    &lt;div&gt;
+      &lt;h2&gt;User Profile&lt;/h2&gt;
+      &lt;p t-esc="component.getUserProfile()" /&gt; &lt;!-- JavaScript method call karte hain --&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/odoo&gt;
+    </code>
+  </pre>
+
+    <h3>4. __manifest__.py - Module Manifest File</h3>
+    <p>
+      Manifest file mein hum Odoo ko batate hain ki is module ki dependencies kya hain, data files kaha hain (jaise
+      templates.xml),
+      aur JS assets kahan hain (jaise user_profile.js aur context.js).
+    </p>
+    <pre>
+    <code class="language-python">
+# __manifest__.py
+{
+  'name': 'User Profile Module',
+  'version': '1.0',
+  'depends': ['web'], # Web module ki dependency
+  'data': [
+    'views/templates.xml', # Template file ko include karte hain
+  ],
+  'assets': {
+    'web.assets_frontend': [
+      'your_module/static/src/user_profile.js', # JS file ko link kar rahe hain
+      'your_module/static/src/context.js', # Context file ko link kar rahe hain
+    ],
+  },
+}
+    </code>
+  </pre>
+
+    <h3>Code ki Explanation (Comments ke saath):</h3>
+    <h4>Context (context.js):</h4>
+    <p>
+      context.js file mein humne UserContext define kiya hai jo user ki name aur email ko global state mein store
+      karega.
+      Hum useContext hook ka use kar rahe hain taaki is context ko apne components mein access kiya ja sake.
+    </p>
+
+    <h4>Component (user_profile.js):</h4>
+    <p>
+      <b>setup()</b>: Is hook ka use hum local state ko initialize karne ke liye karte hain. Hum context ko bhi yahan
+      define karte hain taaki global state ko access kiya ja sake.<br>
+      <b>mounted()</b>: Jab component mount hota hai, hum API se data fetch karte hain aur global context aur local
+      state ko update karte hain.<br>
+      <b>getUserProfile()</b>: Is method mein hum user ke profile ko context se access karke return karte hain taaki UI
+      mein display kiya ja sake.
+    </p>
+
+    <h4>Template (templates.xml):</h4>
+    <p>
+      Template mein hum HTML structure ko define karte hain aur Owl JS ke t-esc directive ka use karte hain taaki
+      JavaScript method ko call karke dynamic content display ho sake.
+    </p>
+
+    <h4>Manifest (__manifest__.py):</h4>
+    <p>
+      Manifest file mein hum Odoo ko batate hain ki kis module ki dependencies hain, data files kaha se fetch karne
+      hain, aur JS assets kaha se load karne hain.
+    </p>
+
+    <h3>State Aur Effect Hooks ka Use:</h3>
+    <p>
+      <b>State Hook (useState)</b> ka use hum local component state ko manage karne ke liye karte hain. Jaise humne
+      userInfo ko store kiya hai, jisme name aur email ki information hogi.<br>
+      <b>Effect Hook (useEffect)</b> ka use hum side-effects ko manage karne ke liye karte hain, jaise hum mounted()
+      hook mein API call kar rahe hain.
+    </p>
+
+    <h3>Lifecycle Hooks:</h3>
+    <ul>
+      <li><b>setup():</b> Is hook ka use hum component ke initialization ke liye karte hain, jahan hum state aur context
+        ko initialize karte hain.</li>
+      <li><b>mounted():</b> Ye hook tab trigger hota hai jab component DOM mein render hota hai. Hum is hook mein API
+        calls karte hain taaki data ko fetch karke state ko update kiya ja sake.</li>
+      <li><b>getUserProfile():</b> Yeh ek custom method hai jo UI ko render karte waqt context se user ki information ko
+        fetch karta hai.</li>
+    </ul>
+
+    <h3>Conclusion:</h3>
+    <p>
+      Is example mein:
+    <ul>
+      <li>Humne context ka use kiya hai taaki global state ko manage kiya ja sake.</li>
+      <li>State aur Effect hooks ka istemal kiya gaya hai taaki data ko dynamically manage kiya ja sake aur component ki
+        reactivity maintain ho sake.</li>
+      <li>Lifecycle hooks ka use karke humne component ka behavior control kiya hai jaise data fetch karna, state update
+        karna, etc.</li>
+    </ul>
+    </p>
+
+    <p>Chaliye, ek aur real-world example lete hain jisme hum Owl JS ke state, effect, aur context hooks ko use karenge.
+      Hum ek task manager banayenge, jisme tasks ko add, remove, aur update kiya ja sakta hai. Is example mein hum
+      global state, local state, aur side-effects ko handle karenge.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h2>Project Structure</h2>
+    <pre>
+    <code class="language-scss">
+/your_module
+/static
+/src
+  - task_manager.js // Task Manager ka Owl JS component
+  - context.js // Global state ko handle karne ke liye context
+/views
+  - templates.xml // Template file jisme UI render hoga
+__manifest__.py // Module ka manifest file
+    </code>
+  </pre>
+
+    <h3>1. context.js - Global State for Task Management</h3>
+    <p>
+      Hum ek context banayenge jisme tasks ki list ko globally manage kiya jayega. Yeh context different components mein
+      shared rahega.
+    </p>
+    <pre>
+    <code class="language-javascript">
+// static/src/context.js
+import { useContext } from "owl";
+
+// TaskContext ko define karte hain jo global task list ko store karega
+export const TaskContext = useContext({
+  tasks: [],
+});
+    </code>
+  </pre>
+
+    <h3>2. task_manager.js - Task Management Component</h3>
+    <p>
+      Ab hum ek component banayenge jo TaskContext ko use karega. Is component mein hum tasks ko add, remove, aur update
+      karenge.
+    </p>
+    <pre>
+    <code class="language-javascript">
+// static/src/task_manager.js
+import { Component, useState, useEffect } from "owl";
+import { TaskContext } from './context'; // Importing the global context
+
+class TaskManager extends Component {
+  // setup() hook mein state aur context ko initialize karte hain
+  setup() {
+    this.tasks = useState([]); // Local task list
+    this.context = TaskContext; // Context ko use kar rahe hain
+  }
+
+  // mounted() hook mein hum initial task list fetch karte hain
+  async mounted() {
+    await this.fetchTasks();
+  }
+
+  // API se task list fetch karne ka method
+  async fetchTasks() {
+    const response = await fetch('/api/tasks');
+    const data = await response.json();
+
+    this.context.tasks = data; // Global context ko update karte hain
+    this.tasks = data; // Local state ko update karte hain
+  }
+
+  // Method to add a new task
+  async addTask(task) {
+    const response = await fetch('/api/tasks', {
+      method: 'POST',
+      body: JSON.stringify({ task }),
+    });
+    const newTask = await response.json();
+
+    this.context.tasks.push(newTask); // Global context ko update karte hain
+    this.tasks.push(newTask); // Local state ko update karte hain
+  }
+
+  // Method to remove a task
+  async removeTask(taskId) {
+    await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+    this.context.tasks = this.context.tasks.filter(task => task.id !== taskId); // Global context ko update karte hain
+    this.tasks = this.tasks.filter(task => task.id !== taskId); // Local state ko update karte hain
+  }
+
+  // Method to render task list
+  getTasks() {
+    return this.context.tasks.map(task => `<li>${task.name}</li>`).join('');
+  }
+}
+
+// Template ko associate karte hain
+TaskManager.template = 'TaskManagerTemplate';
+export default TaskManager;
+    </code>
+  </pre>
+
+    <h3>3. templates.xml - Template File</h3>
+    <p>
+      Yeh XML file aapke UI ko define karegi. Yahaan hum Owl JS template system ka use karenge taaki humare component ka
+      UI render ho sake.
+    </p>
+    <pre>
+    <code class="language-xml">
+&lt;!-- views/templates.xml --&gt;
+&lt;odoo&gt;
+  &lt;template id="TaskManagerTemplate"&gt;
+    &lt;div&gt;
+      &lt;h2&gt;Task Manager&lt;/h2&gt;
+      &lt;ul t-esc="component.getTasks()" /&gt; &lt;!-- JavaScript method call karte hain --&gt;
+      &lt;button t-on-click="component.addTask({ name: 'New Task' })"&gt;Add Task&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/odoo&gt;
+    </code>
+  </pre>
+
+    <h3>4. __manifest__.py - Module Manifest File</h3>
+    <p>
+      Manifest file mein hum Odoo ko batate hain ki is module ki dependencies kya hain, data files kaha hain (jaise
+      templates.xml),
+      aur JS assets kahan hain (jaise task_manager.js aur context.js).
+    </p>
+    <pre>
+    <code class="language-python">
+# __manifest__.py
+{
+  'name': 'Task Manager Module',
+  'version': '1.0',
+  'depends': ['web'], # Web module ki dependency
+  'data': [
+    'views/templates.xml', # Template file ko include karte hain
+  ],
+  'assets': {
+    'web.assets_frontend': [
+      'your_module/static/src/task_manager.js', # JS file ko link kar rahe hain
+      'your_module/static/src/context.js', # Context file ko link kar rahe hain
+    ],
+  },
+}
+    </code>
+  </pre>
+
+    <h3>Code ki Explanation (Comments ke saath):</h3>
+    <h4>Context (context.js):</h4>
+    <p>
+      context.js file mein humne TaskContext define kiya hai jo tasks ki list ko global state mein store karega.
+      Hum useContext hook ka use kar rahe hain taaki is context ko apne components mein access kiya ja sake.
+    </p>
+
+    <h4>Component (task_manager.js):</h4>
+    <p>
+      <b>setup()</b>: Is hook ka use hum local state ko initialize karne ke liye karte hain. Hum context ko bhi yahan
+      define karte hain taaki global state ko access kiya ja sake.<br>
+      <b>mounted()</b>: Jab component mount hota hai, hum API se data fetch karte hain aur global context aur local
+      state ko update karte hain.<br>
+      <b>addTask()</b>: Yeh method ek new task ko add karne ke liye API call karta hai aur state aur context ko update
+      karta hai.<br>
+      <b>removeTask()</b>: Yeh method ek task ko remove karne ke liye API call karta hai aur state aur context ko update
+      karta hai.<br>
+      <b>getTasks()</b>: Yeh method task list ko render karne ke liye context se tasks ko fetch karta hai.
+    </p>
+
+    <h4>Template (templates.xml):</h4>
+    <p>
+      Template mein hum HTML structure ko define karte hain aur Owl JS ke t-esc aur t-on-click directives ka use karte
+      hain taaki dynamic content display ho sake aur events handle kiye ja sake.
+    </p>
+
+    <h4>Manifest (__manifest__.py):</h4>
+    <p>
+      Manifest file mein hum Odoo ko batate hain ki kis module ki dependencies hain, data files kaha se fetch karne
+      hain, aur JS assets kaha se load karne hain.
+    </p>
+
+    <h3>State Aur Effect Hooks ka Use:</h3>
+    <p>
+      <b>State Hook (useState)</b> ka use hum local component state ko manage karne ke liye karte hain. Jaise humne
+      tasks ko store kiya hai.<br>
+      <b>Effect Hook (useEffect)</b> ka use hum side-effects ko manage karne ke liye karte hain, jaise hum mounted()
+      hook mein task list fetch kar rahe hain.
+    </p>
+
+    <h3>Lifecycle Hooks:</h3>
+    <ul>
+      <li><b>setup():</b> Is hook ka use hum component ke initialization ke liye karte hain, jahan hum state aur context
+        ko initialize karte hain.</li>
+      <li><b>mounted():</b> Ye hook tab trigger hota hai jab component DOM mein render hota hai. Hum is hook mein task
+        list fetch karte hain taaki data ko fetch karke state ko update kiya ja sake.</li>
+      <li><b>getTasks():</b> Yeh ek custom method hai jo UI ko render karte waqt context se tasks ko fetch karta hai.
+      </li>
+    </ul>
+
+    <h3>Conclusion:</h3>
+    <p>
+      Is example mein:
+    <ul>
+      <li>Humne context ka use kiya hai taaki global state ko manage kiya ja sake.</li>
+      <li>State aur Effect hooks ka istemal kiya gaya hai taaki data ko dynamically manage kiya ja sake aur component ki
+        reactivity maintain ho sake.</li>
+      <li>Lifecycle hooks ka use karke humne component ka behavior control kiya hai jaise task list fetch karna, state
+        update karna, etc.</li>
+    </ul>
+    </p>
+  </div>
+
+
+  <!-- missisissssisisis -->
+
+  <div class="content">
+    <h1 class="section-title">Example 1: context.js - Global Task List Ko Manage Karna</h1>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/context.js
+import { useContext } from "owl";
+
+// TaskContext ko define karte hain jo task list ko globally store karega
+export const TaskContext = useContext({
+  tasks: [],
+});
+    </code></pre>
+
+    <h1 class="section-title">Example 2: task_manager.js - Component Mein State Aur Effect Hooks Ka Use</h1>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/task_manager.js
+import { Component, useState, useEffect } from "owl";
+import { TaskContext } from './context'; // Importing global TaskContext
+
+class TaskManager extends Component {
+  // setup() hook mein state aur context ko initialize karte hain
+  setup() {
+    // Local state: New task ko store karne ke liye
+    this.newTask = useState('');
+    // Context: Task list ko globally store karne ke liye
+    this.context = TaskContext;
+  }
+
+  // mounted() hook mein hum API se tasks ko fetch karte hain jab component mount hota hai
+  async mounted() {
+    await this.fetchTasks();
+  }
+
+  // API se tasks ko fetch karne ka method
+  async fetchTasks() {
+    const response = await fetch('/api/tasks');
+    const data = await response.json();
+
+    this.context.tasks = data; // Global context mein task list ko update karte hain
+  }
+
+  // Task ko add karne ka method
+  addTask() {
+    const task = this.newTask; // Local state se task ko get karte hain
+    if (task) {
+      this.context.tasks.push({ id: this.context.tasks.length + 1, name: task });
+      this.newTask = ''; // Local state ko reset karte hain
+    }
+  }
+
+  // Task ko remove karne ka method
+  removeTask(id) {
+    this.context.tasks = this.context.tasks.filter(task =&gt; task.id !== id);
+  }
+
+  // Method to render task list
+  renderTaskList() {
+    return this.context.tasks.map(task =&gt; {
+      return `
+      &lt;div class="task"&gt;
+        &lt;span&gt;${task.name}&lt;/span&gt;
+        &lt;button onclick="removeTask(${task.id})"&gt;Remove&lt;/button&gt;
+      &lt;/div&gt;
+      `;
+    }).join('');
+  }
+
+  // Method to render the add task form
+  renderAddTaskForm() {
+    return `
+    &lt;input type="text" value="${this.newTask}" onchange="this.newTask = event.target.value"
+      placeholder="Add a new task" /&gt;
+    &lt;button onclick="addTask()"&gt;Add Task&lt;/button&gt;
+    `;
+  }
+}
+
+// Template ko associate karte hain
+TaskManager.template = 'TaskManagerTemplate';
+export default TaskManager;
+    </code></pre>
+
+    <h1 class="section-title">Example 3: templates.xml - Template File Mein UI ko Define Karna</h1>
+    <pre class="highlight"><code class="language-xml">
+&lt;!-- views/templates.xml --&gt;
+&lt;odoo&gt;
+  &lt;template id="TaskManagerTemplate"&gt;
+    &lt;div&gt;
+      &lt;h2&gt;Task Manager&lt;/h2&gt;
+
+      &lt;!-- Add Task Form --&gt;
+      &lt;div t-raw="component.renderAddTaskForm()" /&gt;
+
+      &lt;!-- Task List --&gt;
+      &lt;div t-raw="component.renderTaskList()" /&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/odoo&gt;
+    </code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="content">
+    <h1 class="section-title">Example 1: context.js - Global Task List Ko Manage Karna</h1>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/context.js
+import { useContext } from "owl";
+
+// TaskContext ko define karte hain jo task list ko globally store karega
+export const TaskContext = useContext({
+  tasks: [],
+});
+    </code></pre>
+
+    <h1 class="section-title">Example 2: task_manager.js - Component Mein State Aur Effect Hooks Ka Use</h1>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/task_manager.js
+import { Component, useState, useEffect } from "owl";
+import { TaskContext } from './context'; // Importing global TaskContext
+
+class TaskManager extends Component {
+  // setup() hook mein state aur context ko initialize karte hain
+  setup() {
+    // Local state: New task ko store karne ke liye
+    this.newTask = useState('');
+    // Context: Task list ko globally store karne ke liye
+    this.context = TaskContext;
+  }
+
+  // mounted() hook mein hum API se tasks ko fetch karte hain jab component mount hota hai
+  async mounted() {
+    await this.fetchTasks();
+  }
+
+  // API se tasks ko fetch karne ka method
+  async fetchTasks() {
+    const response = await fetch('/api/tasks');
+    const data = await response.json();
+
+    this.context.tasks = data; // Global context mein task list ko update karte hain
+  }
+
+  // Task ko add karne ka method
+  addTask() {
+    const task = this.newTask; // Local state se task ko get karte hain
+    if (task) {
+      this.context.tasks.push({ id: this.context.tasks.length + 1, name: task });
+      this.newTask = ''; // Local state ko reset karte hain
+    }
+  }
+
+  // Task ko remove karne ka method
+  removeTask(id) {
+    this.context.tasks = this.context.tasks.filter(task =&gt; task.id !== id);
+  }
+
+  // Method to render task list
+  renderTaskList() {
+    return this.context.tasks.map(task =&gt; {
+      return `
+      &lt;div class="task"&gt;
+        &lt;span&gt;${task.name}&lt;/span&gt;
+        &lt;button onclick="removeTask(${task.id})"&gt;Remove&lt;/button&gt;
+      &lt;/div&gt;
+      `;
+    }).join('');
+  }
+
+  // Method to render the add task form
+  renderAddTaskForm() {
+    return `
+    &lt;input type="text" value="${this.newTask}" onchange="this.newTask = event.target.value"
+      placeholder="Add a new task" /&gt;
+    &lt;button onclick="addTask()"&gt;Add Task&lt;/button&gt;
+    `;
+  }
+}
+
+// Template ko associate karte hain
+TaskManager.template = 'TaskManagerTemplate';
+export default TaskManager;
+    </code></pre>
+
+    <h1 class="section-title">Example 3: templates.xml - Template File Mein UI ko Define Karna</h1>
+    <pre class="highlight"><code class="language-xml">
+&lt;!-- views/templates.xml --&gt;
+&lt;odoo&gt;
+  &lt;template id="TaskManagerTemplate"&gt;
+    &lt;div&gt;
+      &lt;h2&gt;Task Manager&lt;/h2&gt;
+
+      &lt;!-- Add Task Form --&gt;
+      &lt;div t-raw="component.renderAddTaskForm()" /&gt;
+
+      &lt;!-- Task List --&gt;
+      &lt;div t-raw="component.renderTaskList()" /&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/odoo&gt;
+    </code></pre>
+
+    <h1 class="section-title">Example 4: __manifest__.py - Module Manifest File</h1>
+    <pre class="highlight"><code class="language-python">
+# __manifest__.py
+{
+  'name': 'Task Manager Module',
+  'version': '1.0',
+  'depends': ['web'],  # Web module ki dependency
+  'data': [
+    'views/templates.xml',  # Template file ko include kar rahe hain
+  ],
+  'assets': {
+    'web.assets_frontend': [
+      'your_module/static/src/task_manager.js',  # TaskManager component ko include kar rahe hain
+      'your_module/static/src/context.js',  # TaskContext ko include kar rahe hain
+    ],
+  },
+}
+    </code></pre>
+
+    <h2 class="section-title">Code Explanation (In Detail)</h2>
+    <h3>Context (context.js):</h3>
+    <p>
+      TaskContext mein humne tasks ko store kiya hai jo global state ka part hai. Yeh tasks saare components mein
+      accessible
+      honge jo is context ko use karte hain.
+    </p>
+
+    <h3>Component (task_manager.js):</h3>
+    <ul>
+      <li><strong>setup()</strong>: Is hook ka use hum component ko initialize karte waqt karte hain. Hum yahan local
+        state (newTask) aur global state (context.tasks) ko initialize karte hain.</li>
+      <li><strong>mounted()</strong>: Jab component DOM mein mount hota hai, yeh hook trigger hota hai. Hum ismein API
+        call karke tasks ko fetch karte hain aur global context ko update karte hain.</li>
+      <li><strong>addTask()</strong>: Local state (newTask) ko use karke ek naya task add karte hain aur fir usse global
+        context mein store karte hain.</li>
+      <li><strong>removeTask()</strong>: Task ko global context se remove karne ka method hai.</li>
+    </ul>
+
+    <h3>Template (templates.xml):</h3>
+    <p>
+      Template mein hum tasks ko render karte hain jo context se fetch hoti hain. Hum input field aur buttons bhi render
+      karte hain jo user interaction ko handle karte hain.
+    </p>
+
+    <h3>Manifest (__manifest__.py):</h3>
+    <p>
+      Is file mein hum module ki configuration karte hain, jaise data files aur assets ko link karna.
+    </p>
+
+    <h3>State Aur Effect Hooks ka Use:</h3>
+    <ul>
+      <li><strong>State Hook (useState):</strong> Humne newTask ko store karne ke liye local state ka use kiya hai. Jab
+        user koi task add karta hai, toh yeh state update hoti hai.</li>
+      <li><strong>Effect Hook (useEffect):</strong> Humne mounted() hook mein API se tasks fetch kiye hain aur global
+        state ko update kiya hai. Yeh hook component mount hone par trigger hota hai.</li>
+    </ul>
+
+    <h3>Lifecycle Hooks:</h3>
+    <ul>
+      <li><strong>setup():</strong> Is hook mein humne local state aur global context ko initialize kiya.</li>
+      <li><strong>mounted():</strong> Yeh hook component mount hone par trigger hota hai. Ismein hum API se data fetch
+        karte hain aur context ko update karte hain.</li>
+      <li><strong>addTask() aur removeTask():</strong> Yeh methods task ko add aur remove karte hain.</li>
+    </ul>
+
+    <h2 class="section-title">Conclusion:</h2>
+    <p>
+      Is example mein:
+    </p>
+    <ul>
+      <li>Humne context ka use kiya hai taaki task list ko globally manage kiya ja sake.</li>
+      <li>State aur Effect hooks ka use karke humne component ko reactive aur dynamic banaya hai.</li>
+      <li>Lifecycle hooks ka use karke humne component ke behavior ko efficiently control kiya hai, jaise data fetch
+        karna aur update karna.</li>
+    </ul>
+  </div>
+
+
+
+
+  <div class="content">
+    <h1 class="section-title">Example 1: context.js - Global Task List Ko Manage Karna</h1>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/context.js
+import { useContext } from "owl";
+
+// TaskContext ko define karte hain jo task list ko globally store karega
+export const TaskContext = useContext({
+  tasks: [],
+});
+    </code></pre>
+
+    <h1 class="section-title">Example 2: task_manager.js - Component Mein State Aur Effect Hooks Ka Use</h1>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/task_manager.js
+import { Component, useState, useEffect } from "owl";
+import { TaskContext } from './context'; // Importing global TaskContext
+
+class TaskManager extends Component {
+  // setup() hook mein state aur context ko initialize karte hain
+  setup() {
+    // Local state: New task ko store karne ke liye
+    this.newTask = useState('');
+    // Context: Task list ko globally store karne ke liye
+    this.context = TaskContext;
+  }
+
+  // mounted() hook mein hum API se tasks ko fetch karte hain jab component mount hota hai
+  async mounted() {
+    await this.fetchTasks();
+  }
+
+  // API se tasks ko fetch karne ka method
+  async fetchTasks() {
+    const response = await fetch('/api/tasks');
+    const data = await response.json();
+
+    this.context.tasks = data; // Global context mein task list ko update karte hain
+  }
+
+  // Task ko add karne ka method
+  addTask() {
+    const task = this.newTask; // Local state se task ko get karte hain
+    if (task) {
+      this.context.tasks.push({ id: this.context.tasks.length + 1, name: task });
+      this.newTask = ''; // Local state ko reset karte hain
+    }
+  }
+
+  // Task ko remove karne ka method
+  removeTask(id) {
+    this.context.tasks = this.context.tasks.filter(task =&gt; task.id !== id);
+  }
+
+  // Method to render task list
+  renderTaskList() {
+    return this.context.tasks.map(task =&gt; {
+      return `
+      &lt;div class="task"&gt;
+        &lt;span&gt;${task.name}&lt;/span&gt;
+        &lt;button onclick="removeTask(${task.id})"&gt;Remove&lt;/button&gt;
+      &lt;/div&gt;
+      `;
+    }).join('');
+  }
+
+  // Method to render the add task form
+  renderAddTaskForm() {
+    return `
+    &lt;input type="text" value="${this.newTask}" onchange="this.newTask = event.target.value"
+      placeholder="Add a new task" /&gt;
+    &lt;button onclick="addTask()"&gt;Add Task&lt;/button&gt;
+    `;
+  }
+}
+
+// Template ko associate karte hain
+TaskManager.template = 'TaskManagerTemplate';
+export default TaskManager;
+    </code></pre>
+
+    <h1 class="section-title">Example 3: templates.xml - Template File Mein UI ko Define Karna</h1>
+    <pre class="highlight"><code class="language-xml">
+&lt;!-- views/templates.xml --&gt;
+&lt;odoo&gt;
+  &lt;template id="TaskManagerTemplate"&gt;
+    &lt;div&gt;
+      &lt;h2&gt;Task Manager&lt;/h2&gt;
+
+      &lt;!-- Add Task Form --&gt;
+      &lt;div t-raw="component.renderAddTaskForm()" /&gt;
+
+      &lt;!-- Task List --&gt;
+      &lt;div t-raw="component.renderTaskList()" /&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/odoo&gt;
+    </code></pre>
+
+    <h1 class="section-title">Example 4: __manifest__.py - Module Manifest File</h1>
+    <pre class="highlight"><code class="language-python">
+# __manifest__.py
+{
+  'name': 'Task Manager Module',
+  'version': '1.0',
+  'depends': ['web'],  # Web module ki dependency
+  'data': [
+    'views/templates.xml',  # Template file ko include kar rahe hain
+  ],
+  'assets': {
+    'web.assets_frontend': [
+      'your_module/static/src/task_manager.js',  # TaskManager component ko include kar rahe hain
+      'your_module/static/src/context.js',  # TaskContext ko include kar rahe hain
+    ],
+  },
+}
+    </code></pre>
+
+    <h1 class="section-title">Data Fetching (mounted() Method and fetchTasks())</h1>
+    <h3>mounted()</h3>
+    <p>
+      Jab component DOM pe first time render hota hai, toh <code>mounted()</code> method automatically call hota hai.
+      Yeh <code>useEffect</code> ki tarah kaam karta hai jo aapko lifecycle ke start mein action perform karne ki
+      suvidha
+      deta hai. Hum yahan <code>fetchTasks()</code> function call kar rahe hain, jo API se data fetch karta hai.
+    </p>
+
+    <h3>fetchTasks()</h3>
+    <p>
+      Yeh method API call ko handle karta hai. API se data ko fetch karne ke liye hum <code>fetch()</code> method ka use
+      karte hain.
+      Yeh asynchronous operation hai, isliye hum <code>await</code> ka use karte hain taaki code sequentially execute ho
+      aur data milne ke baad next step ho. Agar data fetch ho jata hai, toh <code>this.tasks</code> ko update kar dete
+      hain.
+      Agar kuch galat hota hai toh error catch hota hai aur console pe print hota hai. Finally,
+      <code>this.loading = false</code>
+      karke loading ko disable kar dete hain jab data fetch ho jata hai.
+    </p>
+
+    <h1 class="section-title">UI Rendering (Displaying Data)</h1>
+    <p>
+      <code>render()</code> method mein hum loading aur tasks state ko check karte hain. Agar loading state true hai,
+      toh "Loading..." message display hota hai. Agar loading state false hai (data successfully load ho gaya hai),
+      toh tasks ko ek list ke form mein display kiya jata hai using <code>t-foreach</code>.
+    </p>
+
+    <h1 class="section-title">Owl Template</h1>
+    <p>
+      Template mein hum <code>t-if</code> directive ka use karte hain jo conditional rendering ko handle karta hai.
+      Agar loading state true hai, toh "Loading..." message dikhata hai, aur jab data load ho jata hai toh task list ko
+      render karte hain.
+    </p>
+
+    <h1 class="section-title">Odoo Module Integration</h1>
+    <h3>Module Manifest (__manifest__.py)</h3>
+    <pre class="highlight"><code class="language-python">
+# __manifest__.py
+{
+  'name': 'Task Fetcher Module',
+  'version': '1.0',
+  'depends': ['web'],  # Web module ko depend kar rahe hain
+  'data': [
+    'views/templates.xml',  # Template file ko include kar rahe hain
+  ],
+  'assets': {
+    'web.assets_frontend': [
+      'your_module/static/src/task_fetcher.js',  # TaskFetcher component ko include kar rahe hain
+    ],
+  },
+}
+    </code></pre>
+
+    <h3>Template File (templates.xml)</h3>
+    <pre class="highlight"><code class="language-xml">
+&lt;odoo&gt;
+  &lt;template id="TaskFetcherTemplate"&gt;
+    &lt;div&gt;
+      &lt;h2&gt;Task List&lt;/h2&gt;
+      &lt;!-- Loading state ko show karte hain --&gt;
+      &lt;div t-if="component.loading"&gt;Loading...&lt;/div&gt;
+
+      &lt;!-- Jab data load ho jata hai toh tasks ko display karte hain --&gt;
+      &lt;div t-if="!component.loading"&gt;
+        &lt;ul&gt;
+          &lt;li t-foreach="component.tasks" t-as="task"&gt;
+            &lt;span&gt;
+              &lt;t t-esc="task.title" /&gt;
+            &lt;/span&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+&lt;/odoo&gt;
+    </code></pre>
+
+    <h1 class="section-title">Conclusion (In-depth Explanation)</h1>
+    <p>
+      <code>useState</code> aur <code>useEffect</code> hooks ko use kar ke hum apne component ka state manage kar rahe
+      hain aur
+      asynchronous side-effects (jaise API calls) ko efficiently handle kar rahe hain. <code>useState</code> hook se hum
+      task list
+      aur loading states ko manage karte hain, jisse UI reactively update hota hai jab bhi state change hota hai.
+    </p>
+    <p>
+      <code>mounted()</code> hook, jo <code>useEffect</code> ki tarah kaam karta hai, component ke mount hone ke baad
+      API call
+      karta hai aur fetched data ko state mein update karta hai.
+    </p>
+  </div>
+
+
+
+  <div class="content">
+    <h1 class="section-title">OWL Mein Routing Aur Navigation: Detailed Explanation</h1>
+    <p>
+      OWL (Odoo Web Library) ek powerful JavaScript framework hai jo Odoo mein dynamic aur interactive UIs banane ke
+      liye use hota hai. Jab hum routing aur navigation ki baat karte hain, toh iska matlab hota hai ki hum apne
+      application ke different views ya pages ke beech move kar sakein, jo ek structured way mein render hote hain, aur
+      URLs ko dynamically manage kiya ja sake.
+    </p>
+    <p>
+      Is detailed explanation mein, hum OWL mein Routing aur Navigation ke concepts ko samjhenge, aur kaise hum inhe
+      Odoo mein implement kar sakte hain. Hum is example mein HomePage aur DetailsPage components banayenge, jo
+      route-based navigation implement karenge. Yeh example aapke Odoo custom UI mein use kiya ja sakta hai.
+    </p>
+
+    <h1 class="section-title">OWL Routing Concepts</h1>
+    <p>
+      OWL mein routing ka concept kuch is tarah kaam karta hai:
+    <ul>
+      <li><strong>Routing:</strong> Routing ka matlab hota hai kisi specific URL ke basis par kisi component ko render
+        karna.</li>
+      <li><strong>Dynamic Routes:</strong> Yeh wo routes hote hain jisme parameters included hote hain. Jaise agar hum
+        <code>/details/:id</code> route ka use karte hain, toh <code>:id</code> ek placeholder hota hai jisme hum
+        dynamically kisi specific ID ko pass karte hain.
+      </li>
+      <li><strong>Navigation:</strong> Navigation ka matlab hai ek page se doosre page par jaana.</li>
+    </ul>
+    </p>
+
+    <h1 class="section-title">Step 1: Components Banayein</h1>
+    <h3>HomePage Component (HomePage.js)</h3>
+    <p>
+      Yeh component ek simple welcome message show karega aur ek button hoga jisse hum DetailsPage par navigate kar
+      sakte hain.
+    </p>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/home_page.js
+import { Component } from "owl"; // OWL Component ko import kar rahe hain
+
+class HomePage extends Component {
+  setup() {
+    this.message = "Home Page par aapka swagat hai!"; // Home page ka welcome message
+  }
+
+  render() {
+    return `
+    <div>
+      <h2>
+        <t t-esc="message" />
+      </h2> <!-- Message display karte hain -->
+      <button t-on-click="navigateToDetails">Go to Details</button> <!-- Button to navigate to Details page -->
+    </div>
+    `;
+  }
+
+  // navigateToDetails method - jab button pe click hoga toh Details page par navigate karenge
+  navigateToDetails() {
+    this.props.router.navigate("/details/1"); // Navigate karte hain Details page par, ID = 1
+  }
+}
+
+export default HomePage;
+    </code></pre>
+    <p>
+      <strong>Explanation:</strong>
+    <ul>
+      <li><code>setup()</code> method mein hum component ke initial state ko define karte hain, jaise
+        <code>this.message</code> ko "Home Page par aapka swagat hai!" set kiya hai.
+      </li>
+      <li><code>render()</code> method mein hum template return karte hain, jisme ek button hai. Jab user is button ko
+        click karega, toh <code>navigateToDetails()</code> method call hoga.</li>
+      <li><code>navigateToDetails()</code> method mein <code>this.props.router.navigate("/details/1")</code> use kiya
+        gaya hai, jo DetailsPage par navigate karne ka kaam karega.</li>
+    </ul>
+    </p>
+
+    <h3>DetailsPage Component (DetailsPage.js)</h3>
+    <p>
+      Yeh component dynamically route ke parameter (id) ko access karta hai aur details display karta hai.
+    </p>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/details_page.js
+import { Component } from "owl"; // OWL Component ko import kar rahe hain
+
+class DetailsPage extends Component {
+  setup() {
+    this.routeParams = this.props.router.params; // URL se route params ko fetch kar rahe hain
+    this.message = `Details for ID: ${this.routeParams.id}`; // ID ke basis par message display karte hain
+  }
+
+  render() {
+    return `
+    <div>
+      <h2>
+        <t t-esc="message" />
+      </h2> <!-- Dynamic message display karte hain -->
+      <button t-on-click="navigateToHome">Go to Home</button> <!-- Button to navigate to Home -->
+    </div>
+    `;
+  }
+
+  // navigateToHome method - jab button pe click hoga toh Home page par navigate karenge
+  navigateToHome() {
+    this.props.router.navigate("/home"); // Home page par navigate karenge
+  }
+}
+
+export default DetailsPage;
+    </code></pre>
+    <p>
+      <strong>Explanation:</strong>
+    <ul>
+      <li><code>setup()</code> method mein <code>this.props.router.params</code> se hum URL parameters ko access karte
+        hain. Jaise agar URL <code>/details/1</code> hai, toh <code>this.routeParams.id</code> ko 1 milega.</li>
+      <li><code>render()</code> method mein dynamic message ko display karte hain jo URL parameter (id) ke basis par
+        change hota hai.</li>
+      <li><code>navigateToHome()</code> method mein hum <code>this.props.router.navigate("/home")</code> use karte hain
+        jo HomePage par navigate karne ka kaam karega.</li>
+    </ul>
+    </p>
+
+    <h1 class="section-title">Step 2: Routing Setup</h1>
+    <p>
+      Ab hum routes ko define karenge aur unhe components ke saath link karenge. Routes ko define karte waqt hum dynamic
+      parameters ko bhi consider karenge.
+    </p>
+    <pre class="highlight"><code class="language-javascript">
+// static/src/router.js
+import { Router, Route } from "owl.router"; // OWL se Router aur Route ko import kar rahe hain
+import HomePage from "./home_page"; // HomePage ko import kar rahe hain
+import DetailsPage from "./details_page"; // DetailsPage ko import kar rahe hain
+
+// Define kar rahe hain routes ko
+const routes = [
+  {
+    path: "/home", // Static path for Home
+    component: HomePage, // HomePage component ko link kar rahe hain
+  },
+  {
+    path: "/details/:id", // Dynamic path for Details (id ke sath)
+    component: DetailsPage, // DetailsPage component ko link kar rahe hain
+  }
+];
+
+// MyApp component return kar rahe hain jo Router ko wrap karega
+export const MyApp = () => {
+  return (
+    <Router routes={routes}> {/* Router component ko routes ke saath wrap kar rahe hain */}
+      {/* Routes ke according components render honge */}
+    </Router>
+  );
+};
+    </code></pre>
+    <p>
+      <strong>Explanation:</strong>
+    <ul>
+      <li><code>routes</code> array mein hum define kar rahe hain ki kaunse URL par kaunsa component render hoga:
+        <ul>
+          <li><code>/home</code> route par HomePage render hoga.</li>
+          <li><code>/details/:id</code> route par DetailsPage render hoga, jahan <code>:id</code> dynamic parameter hai.
+          </li>
+        </ul>
+      </li>
+      <li><code>Router</code> component ko use karke hum routes ko manage karte hain aur components ko render karte
+        hain.</li>
+    </ul>
+    </p>
+
+  </div>
+
+
+
+  <div class="content">
+    <h1 class="section-title">Step 3: Mounting OWL App</h1>
+    <p>Ab hum MyApp component ko DOM mein mount karenge, jisse hum apne app ko render kar sakein.</p>
+
+    <h2 class="subsection-title">Main Application Mounting (main.js)</h2>
+    <pre class="highlight"><code class="language-javascript">&lt;!-- static/src/main.js --&gt;
+import { mount } from 'owl'; // OWL se mount ko import kar rahe hain
+import { MyApp } from './router'; // MyApp ko import kar rahe hain (jo routing ko handle karta hai)
+
+// Mounting the OWL app to the DOM
+const app = new MyApp(); // MyApp component ka ek instance create kar rahe hain
+mount(app, document.body); // App ko body mein mount kar rahe hain
+  </code></pre>
+    <p>Explanation:</p>
+    <p>mount() function se hum MyApp component ko DOM mein render karte hain. Yeh app apne routes ke through decide
+      karega ki kaunsa component render karna hai.</p>
+    <p>Isse hum apne application ko start karte hain aur UI ko dynamically update karte hain based on routes.</p>
+
+    <h2 class="subsection-title">Real World Example in Odoo Context</h2>
+    <p>Is routing aur navigation setup ka use Odoo mein bhi kiya ja sakta hai. Maan lijiye ki aap ek Odoo module bana
+      rahe hain jisme aapko Product Management aur Product Details ka page setup karna hai. Aap home page par list of
+      products dikha sakte hain, aur jab user kisi product par click karega, toh uske details ek nayi page par open
+      honge. Yeh implementation OWL mein aapke custom Odoo modules ke liye kaafi useful hoga.</p>
+
+    <h1 class="section-title">project</h1>
+    <p>Building a comprehensive Odoo project that uses all of the mentioned features (Backend models, Frontend views,
+      API integration, Routing, Token-based Authentication, etc.) is a multi-faceted task. Below is an example of a
+      complete project that combines all these concepts to build a "Task Management System" module in Odoo. This example
+      will cover:</p>
+
+    <ul>
+      <li>Backend Models: Task management with a priority system.</li>
+      <li>Frontend Views: Create dynamic pages to manage tasks.</li>
+      <li>API Integration: Allow interaction via RESTful APIs.</li>
+      <li>Routing: Use dynamic routing to access different task-related pages.</li>
+      <li>Token Authentication: Secure API access using tokens.</li>
+    </ul>
+
+    <h2 class="subsection-title">Module Structure</h2>
+    <pre class="highlight"><code class="language-css">task_management/
+├── controllers/
+│   └── main.py
+├── models/
+│   └── task.py
+├── views/
+│   ├── task_form_view.xml
+│   ├── task_tree_view.xml
+│   ├── assets.xml
+│   └── templates.xml
+├── security/
+│   └── ir.model.access.csv
+├── static/
+│   └── src/
+│       └── js/
+│           └── task_management.js
+├── __init__.py
+├── __manifest__.py
+└── routes.py
+  </code></pre>
+
+    <h2 class="subsection-title">1. Manifest File (__manifest__.py)</h2>
+    <pre class="highlight"><code class="language-python">&lt;!-- __manifest__.py --&gt;
+{
+  'name': 'Task Management System',
+  'version': '1.0',
+  'category': 'Project',
+  'summary': 'Manage tasks with dynamic views, token-based API, and routing.',
+  'author': 'Your Name',
+  'website': 'https://www.yourwebsite.com',
+  'depends': ['base', 'web'],
+  'data': [
+    'security/ir.model.access.csv',
+    'views/task_form_view.xml',
+    'views/task_tree_view.xml',
+    'views/templates.xml',
+    'views/assets.xml',
+  ],
+  'assets': {
+    'web.assets_backend': [
+      'task_management/static/src/js/task_management.js',
+    ],
+  },
+  'controllers': [
+    'controllers/main.py',
+  ],
+  'installable': True,
+  'application': True,
+}
+  </code></pre>
+
+    <h2 class="subsection-title">2. Backend Model (models/task.py)</h2>
+    <pre class="highlight"><code class="language-python">&lt;!-- models/task.py --&gt;
+from odoo import models, fields, api
+import uuid
+
+class Task(models.Model):
+  _name = 'task.management'
+  _description = 'Task Management'
+
+  name = fields.Char(string='Task Name', required=True)
+  description = fields.Text(string='Task Description')
+  priority = fields.Selection([
+    ('low', 'Low'),
+    ('medium', 'Medium'),
+    ('high', 'High')
+  ], string='Priority', default='medium')
+  assigned_to = fields.Many2one('res.users', string='Assigned to')
+  deadline = fields.Datetime(string='Deadline')
+  state = fields.Selection([
+    ('new', 'New'),
+    ('in_progress', 'In Progress'),
+    ('completed', 'Completed'),
+  ], string='State', default='new')
+
+  # API Token (for authentication)
+  token = fields.Char(string='Token', readonly=True)
+
+  @api.model
+  def create(self, values):
+    # Generate token when a new task is created
+    values['token'] = self._generate_token()
+    return super(Task, self).create(values)
+
+  def _generate_token(self):
+    # Generate a unique token for each task
+    return str(uuid.uuid4())
+  </code></pre>
+
+    <h2 class="subsection-title">3. Security Rules (security/ir.model.access.csv)</h2>
+    <pre class="highlight"><code class="language-csv">&lt;!-- security/ir.model.access.csv --&gt;
+access_task_management_user,access.task.management.user,model_task_management,base.group_user,1,1,1,1
+  </code></pre>
+
+    <h2 class="subsection-title">4. Views for Backend (views/task_form_view.xml)</h2>
+    <pre class="highlight"><code class="language-xml">&lt;!-- views/task_form_view.xml --&gt;
+&lt;odoo&gt;
+  &lt;record id="view_form_task_management" model="ir.ui.view"&gt;
+    &lt;field name="name"&gt;task.management.form&lt;/field&gt;
+    &lt;field name="model"&gt;task.management&lt;/field&gt;
+    &lt;field name="arch" type="xml"&gt;
+      &lt;form string="Task"&gt;
+        &lt;group&gt;
+          &lt;field name="name" /&gt;
+          &lt;field name="description" /&gt;
+          &lt;field name="priority" /&gt;
+          &lt;field name="assigned_to" /&gt;
+          &lt;field name="deadline" /&gt;
+          &lt;field name="state" /&gt;
+          &lt;field name="token" readonly="1" /&gt;
+        &lt;/group&gt;
+      &lt;/form&gt;
+    &lt;/field&gt;
+  &lt;/record&gt;
+&lt;/odoo&gt;
+  </code></pre>
+
+    <h2 class="subsection-title">5. Views for Tree/List (views/task_tree_view.xml)</h2>
+    <pre class="highlight"><code class="language-xml">&lt;!-- views/task_tree_view.xml --&gt;
+&lt;odoo&gt;
+  &lt;record id="view_tree_task_management" model="ir.ui.view"&gt;
+    &lt;field name="name"&gt;task.management.tree&lt;/field&gt;
+    &lt;field name="model"&gt;task.management&lt;/field&gt;
+    &lt;field name="arch" type="xml"&gt;
+      &lt;tree&gt;
+        &lt;field name="name" /&gt;
+        &lt;field name="priority" /&gt;
+        &lt;field name="assigned_to" /&gt;
+        &lt;field name="state" /&gt;
+      &lt;/tree&gt;
+    &lt;/field&gt;
+  &lt;/record&gt;
+&lt;/odoo&gt;
+  </code></pre>
+  </div>
+
+  <div class="content">
+    <h1 class="section-title">6. API Routes and Controllers (controllers/main.py)</h1>
+
+    <pre class="highlight"><code class="language-python">&lt;!-- controllers/main.py --&gt;
+  from odoo import http
+  from odoo.http import request
+  import json
+  
+  class TaskManagementController(http.Controller):
+  
+    @http.route('/task/api/tasks', type='json', auth='public', methods=['GET'], csrf=False)
+    def get_tasks(self, **kwargs):
+      # Fetch all tasks from the model and return as JSON
+      tasks = request.env['task.management'].search([])
+      tasks_data = []
+      for task in tasks:
+        tasks_data.append({
+          'id': task.id,
+          'name': task.name,
+          'priority': task.priority,
+          'assigned_to': task.assigned_to.name,
+          'state': task.state,
+          'token': task.token
+        })
+      return json.dumps(tasks_data)
+  
+    @http.route('/task/api/task/&lt;int:id&gt;', type='json', auth='public', methods=['GET'], csrf=False)
+    def get_task(self, id, **kwargs):
+      # Fetch a specific task by ID
+      task = request.env['task.management'].browse(id)
+      if task:
+        return json.dumps({
+          'id': task.id,
+          'name': task.name,
+          'priority': task.priority,
+          'assigned_to': task.assigned_to.name,
+          'state': task.state,
+          'token': task.token
+        })
+      return json.dumps({"error": "Task not found"})
+  
+    @http.route('/task/api/create', type='json', auth='user', methods=['POST'], csrf=False)
+    def create_task(self, **kwargs):
+      # Create a new task and return a response
+      task = request.env['task.management'].create({
+        'name': kwargs.get('name'),
+        'description': kwargs.get('description'),
+        'priority': kwargs.get('priority'),
+        'assigned_to': kwargs.get('assigned_to'),
+        'deadline': kwargs.get('deadline'),
+      })
+      return json.dumps({'message': 'Task created successfully', 'task_id': task.id})
+    </code></pre>
+
+    <h2 class="subsection-title">7. Frontend Assets (views/assets.xml)</h2>
+    <pre class="highlight"><code class="language-xml">&lt;!-- views/assets.xml --&gt;
+  &lt;odoo&gt;
+    &lt;template id="assets_backend" name="task_management_assets" inherit_id="web.assets_backend"&gt;
+      &lt;xpath expr="." position="inside"&gt;
+        &lt;script type="text/javascript" src="/task_management/static/src/js/task_management.js"&gt;&lt;/script&gt;
+      &lt;/xpath&gt;
+    &lt;/template&gt;
+  &lt;/odoo&gt;
+    </code></pre>
+
+    <h2 class="subsection-title">8. Frontend Template (views/templates.xml)</h2>
+    <pre class="highlight"><code class="language-xml">&lt;!-- views/templates.xml --&gt;
+  &lt;odoo&gt;
+    &lt;template id="task_list_page" name="Task List Page"&gt;
+      &lt;t t-foreach="tasks" t-as="task"&gt;
+        &lt;div class="task-card"&gt;
+          &lt;h3&gt;
+            &lt;t t-esc="task.name" /&gt;
+          &lt;/h3&gt;
+          &lt;p&gt;
+            &lt;t t-esc="task.priority" /&gt; - &lt;t t-esc="task.state" /&gt;
+          &lt;/p&gt;
+          &lt;p&gt;
+            &lt;t t-esc="task.assigned_to" /&gt;
+          &lt;/p&gt;
+          &lt;button t-on-click="viewDetails(task.id)"&gt;View Details&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/t&gt;
+    &lt;/template&gt;
+  &lt;/odoo&gt;
+    </code></pre>
+
+    <h2 class="subsection-title">9. Frontend JavaScript (static/src/js/task_management.js)</h2>
+    <pre class="highlight"><code class="language-javascript">// static/src/js/task_management.js
+  odoo.define('task_management.task_management', function (require) {
+  "use strict";
+  
+  var rpc = require('web.rpc');
+  var core = require('web.core');
+  var Widget = require('web.Widget');
+  
+  var TaskListPage = Widget.extend({
+    template: 'task_list_page',
+  
+    start: function () {
+      this._super.apply(this, arguments);
+      this.loadTasks();
+    },
+  
+    loadTasks: function () {
+      var self = this;
+      rpc.query({
+        route: '/task/api/tasks',
+      }).then(function (result) {
+        self.tasks = result;
+        self.render();
+      });
+    },
+  
+    viewDetails: function (taskId) {
+      window.location.href = `/task/${taskId}`;
+    },
+  });
+  
+  core.action_registry.add('task_list_page', TaskListPage);
+  });
+    </code></pre>
+
+    <h2 class="subsection-title">10. Routing for Frontend</h2>
+    <p>In Odoo, frontend routing is typically done through core and actions. You can use a custom view or extend the
+      current routing mechanism to create a dynamic page. The JavaScript file above handles the fetching of task data
+      dynamically using rpc.</p>
+  </div>
+
+
+  <div class="content">
+    <h1 class="section-title">11. Testing and Final Setup</h1>
+
+    <p>After you have completed all the components, you should follow these steps to ensure everything is working as
+      expected.</p>
+
+    <h2 class="subsection-title">Step 1: Installing the Module</h2>
+    <ul>
+      <li>Install the module in your Odoo instance.</li>
+      <li>Go to Apps, and click Update Apps List to ensure the new module is visible.</li>
+      <li>Search for the module name "Task Management System" and click Install.</li>
+    </ul>
+
+    <h2 class="subsection-title">Step 2: Testing the Backend</h2>
+    <p>Create a task:</p>
+    <ul>
+      <li>Go to the Task Management menu in Odoo and create a new task through the form view.</li>
+      <li>Test if the Token is generated properly when creating a task.</li>
+    </ul>
+
+    <p>Access the task list:</p>
+    <ul>
+      <li>In the Task Management menu, test the tree view to check if all the tasks are listed correctly, including
+        their attributes such as priority, assigned_to, and state.</li>
+    </ul>
+
+    <h2 class="subsection-title">Step 3: Testing the API (Token-Based Authentication)</h2>
+
+    <p>Fetch all tasks:</p>
+    <pre class="highlight"><code class="language-bash">curl -X GET http://your-odoo-instance/task/api/tasks</code></pre>
+    <p>This should return a list of all tasks in JSON format.</p>
+
+    <p>Fetch a specific task:</p>
+    <pre
+      class="highlight"><code class="language-bash">curl -X GET http://your-odoo-instance/task/api/task/1</code></pre>
+
+    <p>Create a new task:</p>
+    <pre class="highlight"><code class="language-bash">curl -X POST http://your-odoo-instance/task/api/create \
+    -d "name=New Task&priority=high&assigned_to=2&deadline=2024-11-30"</code></pre>
+    <p>Ensure the new task is created and you receive a success message with the task ID.</p>
+
+    <h2 class="subsection-title">Step 4: Testing Frontend (Dynamic Routing and Interaction)</h2>
+
+    <p>Task List Page:</p>
+    <ul>
+      <li>Go to the Task List Page on the Odoo frontend. You should see a list of tasks that you fetched using the RPC
+        method.</li>
+      <li>The "View Details" button should dynamically route you to the Task Detail page for the specific task (using a
+        dynamic route in the frontend).</li>
+    </ul>
+
+    <p>Task Details Page:</p>
+    <ul>
+      <li>If you click the View Details button for any task, you should be redirected to a detailed page of the task
+        (ensure you create a new route for this detail page, if not already done).</li>
+    </ul>
+
+    <h2 class="subsection-title">Step 5: Handling Authentication (Token Validation)</h2>
+
+    <p>Secure API Routes:</p>
+    <p>For authenticated routes (like task creation), you need to validate the token before processing the request.</p>
+
+    <p>Example of token validation in the controller:</p>
+
+    <pre class="highlight"><code class="language-python">&lt;!-- controllers/main.py --&gt;
+  from odoo import http
+  from odoo.http import request
+  import json
+  
+  class TaskManagementController(http.Controller):
+  
+    @http.route('/task/api/create', type='json', auth='user', methods=['POST'], csrf=False)
+    def create_task(self, **kwargs):
+      # Get the token from the request
+      token = kwargs.get('token')
+      task_model = request.env['task.management']
+  
+      # Check if the token matches
+      if not task_model.search([('token', '=', token)]):
+        return json.dumps({"error": "Invalid token"})
+  
+      # Create task only if token is valid
+      task = task_model.create({
+        'name': kwargs.get('name'),
+        'description': kwargs.get('description'),
+        'priority': kwargs.get('priority'),
+        'assigned_to': kwargs.get('assigned_to'),
+        'deadline': kwargs.get('deadline'),
+      })
+  
+      return json.dumps({'message': 'Task created successfully', 'task_id': task.id})
+    </code></pre>
+
+    <p>This ensures that only requests with a valid token can create new tasks, providing basic security for the API.
+    </p>
+
+    <h2 class="subsection-title">Step 6: Customizing and Extending the Functionality</h2>
+
+    <p>You can add additional features based on your needs:</p>
+    <ul>
+      <li><strong>Search and Filter:</strong> You can implement search and filter capabilities on both the frontend and
+        backend to make it easier to find tasks based on certain criteria like priority, state, etc.</li>
+      <li><strong>Task States:</strong> Add features like allowing the task state to change via the frontend, or through
+        an API endpoint, so tasks can move from "new" to "in_progress" to "completed".</li>
+      <li><strong>User Permissions:</strong> You can restrict certain actions (like task creation or task editing) based
+        on user roles. Modify the security rules to implement these restrictions.</li>
+    </ul>
+
+    <h2 class="subsection-title">Complete Example Recap:</h2>
+    <p>In this example, you built a Task Management System with Odoo that:</p>
+    <ul>
+      <li><strong>Backend Model:</strong> Defined a task.management model with attributes like name, description,
+        priority, assigned_to, etc.</li>
+      <li><strong>Frontend Views:</strong> Created views for displaying tasks and a form for task creation.</li>
+      <li><strong>API Integration:</strong> Exposed a REST API to manage tasks (CRUD operations).</li>
+      <li><strong>Routing:</strong> Implemented dynamic routing to access different task views.</li>
+      <li><strong>Token-Based Authentication:</strong> Secured the API routes by validating the task token before
+        processing requests.</li>
+      <li><strong>Frontend Interaction:</strong> Used JavaScript to fetch and display tasks dynamically and to create
+        new tasks via the API.</li>
+    </ul>
+
+    <h2 class="subsection-title">Conclusion:</h2>
+    <p>This project showcases how to create a full-featured Odoo module that leverages Odoo's backend for business
+      logic, frontend for user interaction, API integration for external access, routing for navigation, and token-based
+      authentication for securing sensitive operations. Each piece of functionality is interconnected, creating a
+      seamless experience within the Odoo ecosystem.</p>
+
+    <p>By breaking down this project, you can easily extend and scale it by adding more features, improving the UI, or
+      integrating with other Odoo modules.</p>
+  </div>
+
+
+
+
+
+
+
+  <div class="content">
+    <h1 class="section-title">task_management/</h1>
+    <ul>
+      <li>controllers/
+        <ul>
+          <li><span class="important">main.py</span></li>
+        </ul>
+      </li>
+      <li>models/
+        <ul>
+          <li><span class="important">task.py</span></li>
+        </ul>
+      </li>
+      <li>views/
+        <ul>
+          <li><span class="important">task_form_view.xml</span></li>
+          <li><span class="important">task_tree_view.xml</span></li>
+          <li><span class="important">assets.xml</span></li>
+          <li><span class="important">templates.xml</span></li>
+        </ul>
+      </li>
+      <li>security/
+        <ul>
+          <li><span class="important">ir.model.access.csv</span></li>
+        </ul>
+      </li>
+      <li>static/
+        <ul>
+          <li>src/
+            <ul>
+              <li>js/
+                <ul>
+                  <li><span class="important">task_management.js</span></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><span class="important">__init__.py</span></li>
+      <li><span class="important">__manifest__.py</span></li>
+      <li><span class="important">routes.py</span></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <h2 class="subsection-title">ChatGPT said:</h2>
+    <p>Sure! Let's go through the file structure of the task_management module and explain each file in detail, using
+      comments in your language to make it easy to understand.</p>
+
+    <h3 class="subsection-title">1. controllers/main.py</h3>
+    <p>This file is where we define the logic to handle HTTP requests. It contains routes (URLs) that handle the logic
+      for creating, updating, or retrieving tasks. This is the backend controller that processes the user’s actions
+      and responses.</p>
+
+    <pre><code class="language-python">
+  # main.py
+  
+  from odoo import http
+  from odoo.http import request
+  
+  class TaskManagementController(http.Controller):
+      # Yeh route task create karne ke liye hai
+      @http.route('/task/api/create', type='json', auth='user', methods=['POST'], csrf=False)
+      def create_task(self, **kwargs):
+          # Token ko request se le rahe hain (for authentication)
+          token = kwargs.get('token')
+          task_model = request.env['task.management'] # Task model ko fetch kar rahe hain
+  
+          # Agar token invalid hai toh error return karenge
+          if not task_model.search([('token', '=', token)]):
+              return {"error": "Invalid token"}
+  
+          # Token valid hai toh task create karenge
+          task = task_model.create({
+              'name': kwargs.get('name'),
+              'description': kwargs.get('description'),
+              'priority': kwargs.get('priority'),
+              'assigned_to': kwargs.get('assigned_to'),
+              'deadline': kwargs.get('deadline'),
+          })
+  
+          # Task create hone par success message
+          return {"message": "Task created successfully", "task_id": task.id}
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>create_task: Yeh function task create karne ka kaam karta hai. @http.route decorator se hum POST method ke liye
+      ek route define karte hain jo /task/api/create par available hoga. Ismein token-based authentication hota hai,
+      jisme token verify karte hain. Agar token valid hai toh task create karte hain aur success message bhejte hain.
+    </p>
+
+    <h3 class="subsection-title">2. models/task.py</h3>
+    <p>Yeh file backend model ko define karti hai jo tasks ki data ko store karta hai. Ye data Odoo ke database mein
+      store hota hai.</p>
+
+    <pre><code class="language-python">
+  # task.py
+  
+  from odoo import models, fields
+  
+  class TaskManagement(models.Model):
+      _name = 'task.management' # Model ka name define karte hain
+      _description = 'Task Management'
+  
+      name = fields.Char('Task Name', required=True)
+      description = fields.Text('Description')
+      priority = fields.Selection([('low', 'Low'), ('medium', 'Medium'), ('high', 'High')], 'Priority', default='medium')
+      assigned_to = fields.Many2one('res.users', string='Assigned to') # Res.users model ke sath relationship
+      deadline = fields.Datetime('Deadline')
+      token = fields.Char('Task Token', required=True) # Task token for authentication
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Humne ek task.management model banaya hai jisme name, description, priority, assigned_to, deadline, aur token
+      jaise fields hain. priority mein humne ek selection field rakha hai jo low, medium, aur high options deta hai.
+      assigned_to field Many2one relation define karta hai, jo user ko assign karne ke liye hai.</p>
+
+    <h3 class="subsection-title">3. views/task_form_view.xml</h3>
+    <p>Yeh file Odoo ke frontend views ko define karti hai. Ismein form view diya gaya hai, jisme user task details
+      input kar sakte hain.</p>
+
+    <pre><code class="language-xml">
+  &lt;!-- task_form_view.xml --&gt;
+  
+  &lt;odoo&gt;
+    &lt;record id="view_task_form" model="ir.ui.view"&gt;
+      &lt;field name="name"&gt;task.form.view&lt;/field&gt;
+      &lt;field name="model"&gt;task.management&lt;/field&gt;
+      &lt;field name="arch" type="xml"&gt;
+        &lt;form string="Task Form"&gt;
+          &lt;group&gt;
+            &lt;field name="name" /&gt;
+            &lt;field name="description" /&gt;
+            &lt;field name="priority" /&gt;
+            &lt;field name="assigned_to" /&gt;
+            &lt;field name="deadline" /&gt;
+          &lt;/group&gt;
+        &lt;/form&gt;
+      &lt;/field&gt;
+    &lt;/record&gt;
+  &lt;/odoo&gt;
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh form view task creation ke liye hai. name, description, priority, assigned_to, aur deadline ko form mein
+      dikhaya gaya hai. &lt;form&gt; tag ke andar yeh fields input karne ke liye available hain.</p>
+
+    <h3 class="subsection-title">4. views/task_tree_view.xml</h3>
+    <p>Yeh file tree view ko define karti hai, jisme tasks ko list ke form mein dikhaya jata hai.</p>
+
+    <pre><code class="language-xml">
+  &lt;!-- task_tree_view.xml --&gt;
+  
+  &lt;odoo&gt;
+    &lt;record id="view_task_tree" model="ir.ui.view"&gt;
+      &lt;field name="name"&gt;task.tree.view&lt;/field&gt;
+      &lt;field name="model"&gt;task.management&lt;/field&gt;
+      &lt;field name="arch" type="xml"&gt;
+        &lt;tree string="Task List"&gt;
+          &lt;field name="name" /&gt;
+          &lt;field name="priority" /&gt;
+          &lt;field name="assigned_to" /&gt;
+          &lt;field name="deadline" /&gt;
+        &lt;/tree&gt;
+      &lt;/field&gt;
+    &lt;/record&gt;
+  &lt;/odoo&gt;
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh view task list ko tree view format mein dikhata hai. name, priority, assigned_to, aur deadline fields ko
+      list mein dikhaya gaya hai.</p>
+
+    <h3 class="subsection-title">5. views/assets.xml</h3>
+    <p>Yeh file task module ki static assets ko define karti hai jaise JavaScript aur CSS. Ismein hum frontend pe koi
+      custom JS ya CSS use kar sakte hain.</p>
+
+    <pre><code class="language-xml">
+  &lt;!-- assets.xml --&gt;
+  
+  &lt;odoo&gt;
+    &lt;template id="assets_backend" name="task_management assets" inherit_id="web.assets_backend"&gt;
+      &lt;xpath expr="." position="inside"&gt;
+        &lt;script type="text/javascript" src="/task_management/static/src/js/task_management.js"&gt;&lt;/script&gt;
+      &lt;/xpath&gt;
+    &lt;/template&gt;
+  &lt;/odoo&gt;
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh file task management module ke liye custom JavaScript ko include karti hai. JavaScript file
+      task_management.js ko hum assets_backend mein add kar rahe hai </p>
+    <p>kar rahe hain taaki yeh backend mein load ho.</p>
+
+    <h3 class="subsection-title">6. views/templates.xml</h3>
+    <p>Yeh file QWeb templates ko define karti hai jo custom HTML aur UI components ko manage karti hai. QWeb
+      templates Odoo ke rendering engine ka part hote hain, jo frontend views ko generate karte hain.</p>
+
+    <pre><code class="language-xml">
+  &lt;!-- templates.xml --&gt;
+  
+  &lt;odoo&gt;
+    &lt;template id="task_management_template"&gt;
+      &lt;div class="task-template"&gt;
+        &lt;h3&gt;Task Details&lt;/h3&gt;
+        &lt;p&gt;Name: &lt;span t-esc="task.name"/&gt;&lt;/p&gt;
+        &lt;p&gt;Description: &lt;span t-esc="task.description"/&gt;&lt;/p&gt;
+        &lt;p&gt;Priority: &lt;span t-esc="task.priority"/&gt;&lt;/p&gt;
+        &lt;p&gt;Assigned To: &lt;span t-esc="task.assigned_to.name"/&gt;&lt;/p&gt;
+        &lt;p&gt;Deadline: &lt;span t-esc="task.deadline"/&gt;&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/template&gt;
+  &lt;/odoo&gt;
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh template task details ko show karta hai. Humne task fields ko HTML structure mein display kiya hai, jisme
+      task ka name, description, priority, assigned user, aur deadline show kiye gaye hain.</p>
+
+    <h3 class="subsection-title">7. security/ir.model.access.csv</h3>
+    <p>Yeh file model access control ko define karti hai, jo kisi user ko kis model ka access hai, isse specify karti
+      hai. Yeh file security rules ko configure karne ke liye use hoti hai.</p>
+
+    <pre><code class="language-csv">
+  "access_task_management_user","task management user","model_task_management","task_management.group_task_management_user",1,1,1,1
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh access control list task model ke liye hai. Ismein humne task management model ke liye users ko access
+      grant kiya hai, jaise "task_management_user" group ko permissions di gayi hain.</p>
+
+    <h3 class="subsection-title">8. static/src/js/task_management.js</h3>
+    <p>Yeh JavaScript file task management module ke liye custom functionality ko define karti hai, jo frontend pe
+      load hoti hai. Ismein tasks ko handle karne ke liye JavaScript code hote hain.</p>
+
+    <pre><code class="language-javascript">
+  /* task_management.js */
+  
+  odoo.define('task_management.task_management', function (require) {
+      "use strict";
+  
+      var core = require('web.core');
+      var Widget = require('web.Widget');
+  
+      var TaskWidget = Widget.extend({
+          start: function () {
+              this._super.apply(this, arguments);
+              console.log('Task Management Widget Loaded!');
+          },
+      });
+  
+      core.action_registry.add('task_management_widget', TaskWidget);
+  });
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh JavaScript widget ko define karta hai jo Odoo ki frontend functionality mein use hota hai. Ismein simple
+      "TaskWidget" banaya gaya hai, jo load hone par console pe message dikhata hai.</p>
+
+    <h3 class="subsection-title">9. __init__.py</h3>
+    <p>Yeh file Python module ke initializations ko define karti hai. Ismein hum module ke imports ko specify karte
+      hain taaki system module ko recognize kare.</p>
+
+    <pre><code class="language-python">
+  # __init__.py
+  
+  from . import controllers
+  from . import models
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh file Odoo ko batata hai ki kaunse submodules ko import kiya gaya hai, jaise controllers aur models ko.</p>
+
+    <h3 class="subsection-title">10. __manifest__.py</h3>
+    <p>Yeh file Odoo module ka manifest hai, jo module ka name, description, version, aur dependencies ko define karti
+      hai.</p>
+
+    <pre><code class="language-python">
+  # __manifest__.py
+  
+  {
+      'name': 'Task Management',
+      'version': '1.0',
+      'category': 'Tools',
+      'description': 'Manage tasks effectively.',
+      'author': 'Your Name',
+      'website': 'https://www.example.com',
+      'depends': ['base'],
+      'data': [
+          'views/task_form_view.xml',
+          'views/task_tree_view.xml',
+          'views/assets.xml',
+          'views/templates.xml',
+          'security/ir.model.access.csv',
+      ],
+      'installable': True,
+      'auto_install': False,
+  }
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh manifest file module ki basic information ko define karti hai. Ismein module ka name, version, aur
+      dependencies specified hain. 'data' field mein views aur other files include ki gayi hain.</p>
+
+    <h3 class="subsection-title">11. routes.py</h3>
+    <p>Yeh file module ke routes ko handle karti hai. Ismein routes define karte hain jisme user ko different API
+      endpoints ya pages ki taraf route kiya jata hai.</p>
+
+    <pre><code class="language-python">
+  # routes.py
+  
+  from odoo import http
+  
+  class TaskManagementRoutes(http.Controller):
+      @http.route('/task/list', auth='public', website=True)
+      def task_list(self, **kwargs):
+          return http.request.render('task_management.task_list_template')
+      </code></pre>
+
+    <p><strong>Explanation:</strong></p>
+    <p>Yeh route task list ko display karne ke liye hai. Jab user /task/list URL pe jata hai, toh yeh task list ko
+      show karta hai.</p>
+  </div>
+
+
+
+
+
+
+
+  <div class="content">
+    <!-- templates.xml -->
+    &lt;!-- templates.xml --&gt;
+
+    &lt;odoo&gt;
+    &lt;template id="task_template" name="Task Template"&gt;
+    &lt;div&gt;
+    &lt;h2&gt;Task Details&lt;/h2&gt;
+    &lt;p&gt;Task Name: &lt;span t-field="task.name" /&gt;&lt;/p&gt;
+    &lt;p&gt;Assigned To: &lt;span t-field="task.assigned_to.name" /&gt;&lt;/p&gt;
+    &lt;p&gt;Priority: &lt;span t-field="task.priority" /&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;/template&gt;
+    &lt;/odoo&gt;
+    Explanation:
+    Yeh QWeb template task details ko HTML mein dikhata hai.
+    t-field directive se hum task ka name, assigned_to, aur priority display karte hain.
+    7. security/ir.model.access.csv
+    Yeh file model ke liye access control rules define karti hai, jisme hum specify karte hain kaun users ko kis
+    model ka access dena hai.
+
+    csv
+    Copy code
+    # ir.model.access.csv
+
+    id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+    access_task_management_user,task.management.user,model_task_management,base.group_user,1,1,1,1
+    Explanation:
+    Yeh file access control define karti hai.
+    Ismein user group base.group_user ko task.management model ka full access diya gaya hai (read, write, create,
+    delete).
+    8. static/src/js/task_management.js
+    Yeh file JavaScript ko manage karti hai, jo frontend mein task data ko interact karne ke liye use hoti hai.
+
+    javascript
+    Copy code
+    // task_management.js
+
+    odoo.define('task_management.task', function(require) {
+    "use strict";
+    var Widget = require('web.Widget');
+
+    var TaskWidget = Widget.extend({
+    template: 'task_template', // Humne jo template banaya tha usse link kar rahe hain
+    init: function(parent) {
+    this._super(parent);
+    this.task = {name: 'Sample Task', assigned_to: {name: 'John'}, priority: 'High'};
+    }
+    });
+
+    return TaskWidget;
+    });
+    Explanation:
+    Yeh widget task data ko frontend par display karta hai.
+    this.task ko humne sample data assign kiya hai jo UI par show hota hai.
+    9. __init__.py
+    Yeh file module ko initialize karti hai.
+
+    python
+    Copy code
+    # __init__.py
+
+    from . import controllers
+    from . import models
+    Explanation:
+    Yeh controllers aur models ko import karta hai taaki Odoo module ko sahi se load kar sake.
+    10. __manifest__.py
+    Yeh file module ki metadata ko define karti hai jaise module ka name, version, author
+
+    11. Testing and Final Setup
+    After you have completed all the components, you should follow these steps to ensure everything is working as
+    expected.
+
+    Step 1: Installing the Module
+    Install the module in your Odoo instance.
+    Go to Apps, and click Update Apps List to ensure the new module is visible.
+    Search for the module name "Task Management System" and click Install.
+    Step 2: Testing the Backend
+    Create a task:
+    Go to the Task Management menu in Odoo and create a new task through the form view.
+    Test if the Token is generated properly when creating a task.
+    Access the task list:
+    In the Task Management menu, test the tree view to check if all the tasks are listed correctly, including their
+    attributes such as priority, assigned_to, and state.
+    Step 3: Testing the API (Token-Based Authentication)
+    Fetch all tasks:
+
+    Using the GET method, call the /task/api/tasks route via a REST client like Postman or cURL:
+    bash
+    Copy code
+    curl -X GET http://your-odoo-instance/task/api/tasks
+    This should return a list of all tasks in JSON format.
+    Fetch a specific task:
+
+    You can fetch a single task by calling /task/api/task/&lt;id&gt; where id is the task's ID:
+    bash
+    Copy code
+    curl -X GET http://your-odoo-instance/task/api/task/1
+    Create a new task:
+
+    To create a task via the API, send a POST request to /task/api/create with the task data in the request body
+    (you can use Postman or any HTTP client):
+    bash
+    Copy code
+    curl -X POST http://your-odoo-instance/task/api/create \
+    -d "name=New Task&priority=high&assigned_to=2&deadline=2024-11-30"
+    Ensure the new task is created and you receive a success message with the task ID.
+    Step 4: Testing Frontend (Dynamic Routing and Interaction)
+    Task List Page:
+
+    Go to the Task List Page on the Odoo frontend. You should see a list of tasks that you fetched using the RPC
+    method.
+    The "View Details" button should dynamically route you to the Task Detail page for the specific task (using a
+    dynamic route in the frontend).
+    Task Details Page:
+
+    If you click the View Details button for any task, you should be redirected to a detailed page of the task
+    (ensure you create a new route for this detail page, if not already done).
+    Step 5: Handling Authentication (Token Validation)
+    Secure API Routes:
+
+    For authenticated routes (like task creation), you need to validate the token before processing the request.
+    Modify your controller to verify the token of the user in the POST request before allowing task creation.
+    Example of token validation in the controller:
+
+    python
+    Copy code
+    # controllers/main.py
+    from odoo import http
+    from odoo.http import request
+    import json
+
+    class TaskManagementController(http.Controller):
+
+    @http.route('/task/api/create', type='json', auth='user', methods=['POST'], csrf=False)
+    def create_task(self, **kwargs):
+    # Get the token from the request
+    token = kwargs.get('token')
+    task_model = request.env['task.management']
+
+    # Check if the token matches
+    if not task_model.search([('token', '=', token)]):
+    return json.dumps({"error": "Invalid token"})
+
+    # Create task only if token is valid
+    task = task_model.create({
+    'name': kwargs.get('name'),
+    'description': kwargs.get('description'),
+    'priority': kwargs.get('priority'),
+    'assigned_to': kwargs.get('assigned_to'),
+    'deadline': kwargs.get('deadline'),
+    })
+
+    return json.dumps({'message': 'Task created successfully', 'task_id': task.id})
+    This ensures that only requests with a valid token can create new tasks, providing basic security for the API.
+
+    Step 6: Customizing and Extending the Functionality
+    You can add additional features based on your needs:
+
+    Search and Filter: You can implement search and filter capabilities on both the frontend and backend to make
+    it easier to find tasks based on certain criteria like priority, state, etc.
+
+    Task States: Add features like allowing the task state to change via the frontend, or through an API endpoint,
+    so tasks can move from "new" to "in_progress" to "completed".
+
+    User Permissions: You can restrict certain actions (like task creation or task editing) based on user roles.
+    Modify the security rules to implement these restrictions.
+
+    Complete Example Recap:
+    In this example, you built a Task Management System with Odoo that:
+
+    Backend Model: Defined a task.management model with attributes like name, description, priority, assigned_to,
+    etc.
+    Frontend Views: Created views for displaying tasks and a form for task creation.
+    API Integration: Exposed a REST API to manage tasks (CRUD operations).
+    Routing: Implemented dynamic routing to access different task views.
+    Token-Based Authentication: Secured the API routes by validating the task token before processing requests.
+    Frontend Interaction: Used JavaScript to fetch and display tasks dynamically and to create new tasks via the
+    API.
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <div class="content">
     <h1 class="section-title">Example:</h1>
 
